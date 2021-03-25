@@ -1,0 +1,60 @@
+<script>
+var capi_creation_time = new Date().getTime();
+var capi_event_id = "E"+ capi_creation_time;
+var capi_page_url = location.href;
+var capi_user_agent = navigator.userAgent;
+var capi_fbclid =  (new URL(location.href)).searchParams.get('fbclid')
+if (capi_fbclid != null){
+var capi_click_id = "fb.1."+ capi_creation_time + "." + capi_fbclid;
+}
+  
+document.getElementById('capi_creation_time').value = capi_creation_time;
+  
+
+var utm_source =  (new URL(location.href)).searchParams.get('utm_source');
+var utm_medium =  (new URL(location.href)).searchParams.get('utm_medium');
+var utm_campaign =  (new URL(location.href)).searchParams.get('utm_campaign');
+var utm_content =  (new URL(location.href)).searchParams.get('utm_content');
+var campaign_id =  (new URL(location.href)).searchParams.get('campaign_id');
+</script>
+
+<script>
+    fetch("https://api.ipify.org?format=jsonp&callback=getIP", 
+    { 
+        method: "GET" 
+    })
+    .then(response => response.text()) 
+    .then(text => {
+        var r = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/;
+        var t = text.match(r);
+        var capi_user_ip = t[0];       
+      
+       document.getElementsByName('GgOTdOcmIBgIjYWwzUM5')[0].value = capi_user_ip; 
+      document.getElementsByName('GgOTdOcmIBgIjYWwzUM5')[0].dispatchEvent(new Event("input"));
+
+        fetch("enter_your_webhook_url_here", 
+        { 
+            method: "POST", 
+            body: JSON.stringify({ 
+                capi_creation_time: capi_creation_time, 
+                capi_event_id: capi_event_id, 
+                capi_page_url: capi_page_url,
+                capi_user_agent: capi_user_agent,
+                capi_fbclid: capi_fbclid,
+                capi_click_id: capi_click_id,
+                capi_user_ip: capi_user_ip,
+                utm_source: utm_source,
+                utm_medium: utm_medium,
+                utm_campaign: utm_campaign,
+                utm_content: utm_content,
+                campaign_id: campaign_id,
+        
+            }), 
+            headers: { 
+                "Content-type": "application/json; charset=UTF-8"
+            } 
+        }) 
+        .then(response => response.text()) 
+        .then(json => console.log(json)); 
+    });
+</script>
